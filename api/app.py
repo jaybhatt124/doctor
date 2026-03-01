@@ -29,12 +29,12 @@ app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
 # ───────────────────────────────
 def get_db():
     return pymysql.connect(
-        host=os.environ.get("DB_HOST"),
-        port=4000,
+        host=os.environ.get("DB_HOST"),  # e.g., your public host from TiDB Cloud
+        port=int(os.environ.get("DB_PORT", 4000)),
         user=os.environ.get("DB_USER"),
         password=os.environ.get("DB_PASSWORD"),
         database=os.environ.get("DB_NAME"),
-        ssl={"ssl": {}},
+        ssl={"ssl": {}},  # Required for TiDB Cloud
         cursorclass=pymysql.cursors.DictCursor
     )
     except Exception as e:
