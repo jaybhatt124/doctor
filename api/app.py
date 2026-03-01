@@ -28,16 +28,15 @@ app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
 # DATABASE CONFIG (SAFE VERSION)
 # ───────────────────────────────
 def get_db():
-    try:
-        return pymysql.connect(
-            host=os.environ.get("DB_HOST"),
-            user=os.environ.get("DB_USER"),
-            password=os.environ.get("DB_PASSWORD"),
-            db=os.environ.get("DB_NAME"),
-            charset="utf8mb4",
-            cursorclass=pymysql.cursors.DictCursor,
-            autocommit=True
-        )
+    return pymysql.connect(
+        host=os.environ.get("DB_HOST"),
+        port=4000,
+        user=os.environ.get("DB_USER"),
+        password=os.environ.get("DB_PASSWORD"),
+        database=os.environ.get("DB_NAME"),
+        ssl={"ssl": {}},
+        cursorclass=pymysql.cursors.DictCursor
+    )
     except Exception as e:
         print("DATABASE ERROR:", e)
         return None
