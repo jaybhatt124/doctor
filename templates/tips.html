@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Health Tips — AI Doctor Analysis</title><link rel="stylesheet" href="/static/css/style.css"></head>
+<body>
+<header><div class="hdr"><a href="/" class="logo"><div class="logo-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div><div class="logo-t">AI Doctor <span>Analysis</span></div><div class="logo-s">Smart Health Education</div></div></a><nav class="main-nav" id="main-nav"><a href="/" class="nav-link">Home</a><a href="/about" class="nav-link">About</a><a href="/tips" class="nav-link active">Health Tips</a><a href="/contact" class="nav-link">Contact</a></nav><button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button></div></header>
+
+<div class="pg-hero tips-bg"><div class="container"><div class="badge">💊 Health Education</div><h1>Health Tips &amp; Wellness Guide</h1><p>Evidence-based tips to help you live healthier and make safer medical decisions every day.</p></div></div>
+
+<div class="container tips-body">
+  <div id="tips-content"><div style="text-align:center;padding:60px"><div class="loader"></div><p style="color:var(--tx-m)">Loading tips from database...</p></div></div>
+</div>
+
+<footer><div class="container"><div class="foot-grid"><div class="foot-brand"><a href="/" class="logo" style="margin-bottom:10px;display:inline-flex"><div class="logo-ic" style="width:34px;height:34px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div><div class="logo-t" style="font-size:15px">AI Doctor <span>Analysis</span></div></div></a><p>An educational health platform.</p></div><div class="foot-links"><h4>Quick Links</h4><a href="/">Home</a><a href="/about">About</a><a href="/tips">Health Tips</a><a href="/contact">Contact</a></div><div class="foot-links"><h4>Body Regions</h4><a href="/illness?part=head">Head</a><a href="/illness?part=chest">Chest</a><a href="/illness?part=stomach">Stomach</a><a href="/illness?part=back">Back</a><a href="/illness?part=feet">Feet</a></div><div class="foot-disc"><h4>Disclaimer</h4><p>For educational purposes only. Consult a qualified medical professional.</p></div></div><div class="foot-btm">© 2024 AI Doctor Analysis. Educational use only.</div></div></footer>
+
+<div id="toast" class="toast"></div>
+<script src="/static/js/shared.js"></script>
+<script>
+const CAT_LABELS={'home_care':'🏠 Home Care Tips','medicine_safety':'💊 Medicine Safety Tips','nutrition':'🥦 Nutrition Tips','fitness':'🏋️ Fitness Tips','mental_health':'🧘 Mental Health Tips'};
+
+async function loadTips(){
+  const el=document.getElementById('tips-content');
+  try{
+    const r=await fetch('/api/health-tips');
+    const j=await r.json();
+    if(!j.success){el.innerHTML='<p style="color:var(--tx-m);text-align:center;padding:40px">Could not load tips.</p>';return;}
+    let html='';
+    Object.entries(j.data).forEach(([cat,tips])=>{
+      html+=`<div class="tips-sec reveal"><div class="tips-sec-title">${CAT_LABELS[cat]||cat}</div><div class="tips-grid">${tips.map(t=>`<div class="tip-card"><div class="tip-ico">${esc(t.icon||'💡')}</div><div class="tip-title">${esc(t.title)}</div><div class="tip-desc">${esc(t.description)}</div></div>`).join('')}</div></div>`;
+    });
+    if(!html)html='<p style="color:var(--tx-m);text-align:center;padding:40px">No tips available yet.</p>';
+    html+=`<div style="background:var(--g50);border-radius:var(--r);padding:32px;margin-bottom:40px;border-left:4px solid var(--pr)" class="reveal"><h3 style="color:var(--pr);margin-bottom:12px">⚕️ Always Remember</h3><p style="color:var(--tx-l);line-height:1.75">These health tips are for general educational purposes only. Always consult your healthcare provider before making significant changes to your diet, exercise routine, or medication.</p></div>`;
+    el.innerHTML=html;
+    initReveal();
+  }catch(e){el.innerHTML='<p style="color:var(--tx-m);text-align:center;padding:40px">Could not load tips. Make sure Flask server is running.</p>';}
+}
+loadTips();
+</script>
+</body></html>

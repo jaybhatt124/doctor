@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Doctor Analysis — Smart Health Education</title>
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="hdr">
+    <a href="/" class="logo">
+      <div class="logo-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+      <div><div class="logo-t">AI Doctor <span>Analysis</span></div><div class="logo-s">Smart Health Education</div></div>
+    </a>
+    <nav class="main-nav" id="main-nav">
+      <a href="/" class="nav-link active">Home</a>
+      <a href="/about" class="nav-link">About</a>
+      <a href="/tips" class="nav-link">Health Tips</a>
+      <a href="/contact" class="nav-link">Contact</a>
+    </nav>
+    <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-badge">🏥 Interactive Health Guide</div>
+      <h1>Select the body part<br><span>where you feel pain</span></h1>
+      <p class="hero-sub">Click on any highlighted body part to discover possible conditions, symptoms, care tips, and specialist recommendations.</p>
+      <div class="hero-stats">
+        <div><span class="st-num">10+</span><span class="st-lbl">Body Regions</span></div>
+        <div class="st-div"></div>
+        <div><span class="st-num">20+</span><span class="st-lbl">Conditions</span></div>
+        <div class="st-div"></div>
+        <div><span class="st-num">12+</span><span class="st-lbl">Specialists</span></div>
+      </div>
+    </div>
+
+    <div class="hero-body">
+      <div class="body-lbl" id="hover-lbl">Hover to select</div>
+      <svg class="body-svg" viewBox="0 0 220 580" xmlns="http://www.w3.org/2000/svg">
+        <defs><filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+        <g fill="#ddeeff" stroke="#a8c8e8" stroke-width="1.2">
+          <ellipse cx="110" cy="52" rx="32" ry="38"/>
+          <rect x="98" y="87" width="24" height="22" rx="4"/>
+          <path d="M68 109 Q62 109 56 120 L44 200 Q42 220 50 230 L60 290 L160 290 L170 230 Q178 220 176 200 L164 120 Q158 109 152 109 Z"/>
+          <ellipse cx="52" cy="128" rx="18" ry="14"/><ellipse cx="168" cy="128" rx="18" ry="14"/>
+          <path d="M36 139 Q28 146 26 171 L28 210 Q30 220 38 222 L46 222 Q52 220 54 210 L56 180 Q56 156 48 139 Z"/>
+          <path d="M184 139 Q192 146 194 171 L192 210 Q190 220 182 222 L174 222 Q168 220 166 210 L164 180 Q164 156 172 139 Z"/>
+          <path d="M29 224 Q24 241 24 268 L26 295 Q28 305 34 307 L42 307 Q48 305 50 295 L50 268 Q50 243 48 224 Z"/>
+          <path d="M172 224 Q172 243 170 268 L170 295 Q172 305 178 307 L186 307 Q192 305 194 295 L196 268 Q196 241 191 224 Z"/>
+          <ellipse cx="36" cy="316" rx="11" ry="14"/><ellipse cx="184" cy="316" rx="11" ry="14"/>
+          <path d="M60 290 Q55 310 62 325 L90 335 L130 335 L158 325 Q165 310 160 290 Z"/>
+          <path d="M65 333 Q55 346 54 381 L54 416 Q56 430 66 434 L80 434 Q90 430 92 416 L90 381 Q88 349 82 333 Z"/>
+          <path d="M155 333 Q165 346 166 381 L166 416 Q164 430 154 434 L140 434 Q130 430 128 416 L130 381 Q132 349 138 333 Z"/>
+          <ellipse cx="73" cy="443" rx="16" ry="14"/><ellipse cx="147" cy="443" rx="16" ry="14"/>
+          <path d="M59 457 Q56 476 57 505 L58 530 Q60 540 67 542 L78 542 Q85 540 87 530 L88 505 Q89 476 88 457 Z"/>
+          <path d="M132 457 Q131 476 132 505 L133 530 Q135 540 142 542 L153 542 Q160 540 162 530 L163 505 Q164 476 161 457 Z"/>
+          <path d="M57 543 Q55 556 58 564 L92 566 Q98 564 97 556 L95 543 Z"/>
+          <path d="M133 543 Q131 556 133 564 L167 566 Q173 564 172 556 L170 543 Z"/>
+        </g>
+        <!-- CLICKABLE BODY PARTS -->
+        <ellipse class="bp" data-part="head" data-lbl="Head" cx="110" cy="52" rx="34" ry="40"/>
+        <rect class="bp" data-part="neck" data-lbl="Neck" x="93" y="86" width="34" height="26" rx="5"/>
+        <ellipse class="bp" data-part="shoulders" data-lbl="Left Shoulder" cx="52" cy="125" rx="23" ry="18"/>
+        <ellipse class="bp" data-part="shoulders" data-lbl="Right Shoulder" cx="168" cy="125" rx="23" ry="18"/>
+        <path class="bp" data-part="chest" data-lbl="Chest" d="M74 109 L146 109 L158 168 L62 168 Z"/>
+        <path class="bp" data-part="stomach" data-lbl="Stomach" d="M62 170 L158 170 L162 260 L58 260 Z"/>
+        <path class="bp" data-part="arms" data-lbl="Left Arm" d="M24 135 Q14 162 18 218 L54 218 L56 176 L44 135 Z"/>
+        <path class="bp" data-part="arms" data-lbl="Right Arm" d="M166 135 L176 135 Q206 162 202 218 L166 218 L164 176 Z"/>
+        <path class="bp" data-part="back" data-lbl="Back / Lower Back" d="M62 262 L58 292 L162 292 L158 262 Z"/>
+        <ellipse class="bp" data-part="knees" data-lbl="Left Knee" cx="73" cy="443" rx="18" ry="16"/>
+        <ellipse class="bp" data-part="knees" data-lbl="Right Knee" cx="147" cy="443" rx="18" ry="16"/>
+        <path class="bp" data-part="legs" data-lbl="Left Leg" d="M54 333 L92 333 L92 428 L54 428 Z"/>
+        <path class="bp" data-part="legs" data-lbl="Right Leg" d="M128 333 L166 333 L166 428 L128 428 Z"/>
+        <path class="bp" data-part="legs" data-lbl="Left Lower Leg" d="M56 460 L90 460 L90 538 L56 538 Z"/>
+        <path class="bp" data-part="legs" data-lbl="Right Lower Leg" d="M130 460 L164 460 L164 538 L130 538 Z"/>
+        <path class="bp" data-part="feet" data-lbl="Left Foot" d="M53 541 L100 541 L100 568 L53 568 Z"/>
+        <path class="bp" data-part="feet" data-lbl="Right Foot" d="M120 541 L172 541 L172 568 L120 568 Z"/>
+        <g font-family="DM Sans,sans-serif" font-size="7" fill="#1a6bb5" pointer-events="none" text-anchor="middle">
+          <text x="110" y="54">Head</text><text x="110" y="101">Neck</text>
+          <text x="45" y="130">Shoulder</text><text x="175" y="130">Shoulder</text>
+          <text x="110" y="142">Chest</text><text x="110" y="222">Stomach</text>
+          <text x="18" y="185">Arm</text><text x="202" y="185">Arm</text>
+          <text x="110" y="280">Back</text>
+          <text x="73" y="448">Knee</text><text x="147" y="448">Knee</text>
+          <text x="73" y="385">Leg</text><text x="147" y="385">Leg</text>
+          <text x="73" y="558">Foot</text><text x="147" y="558">Foot</text>
+        </g>
+      </svg>
+      <div class="body-hint"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg> Click any body part for health info</div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMON ILLNESSES -->
+<section class="common-section">
+  <div class="container">
+    <div class="sec-lbl">Quick Access</div>
+    <h2 class="sec-title">Common Illnesses — Click for Details</h2>
+    <div class="common-grid" id="common-grid">
+      <div style="grid-column:1/-1;text-align:center;padding:32px"><div class="loader"></div><p style="color:var(--tx-m)">Loading...</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="container">
+    <div class="sec-lbl">Why Use This Platform</div>
+    <h2 class="sec-title">Your Personal Health Education Tool</h2>
+    <div class="feat-grid">
+      <div class="feat-card reveal"><div class="feat-icon">🔬</div><h3>Evidence-Based Info</h3><p>All health information based on established medical knowledge for accurate educational content.</p></div>
+      <div class="feat-card reveal"><div class="feat-icon">🩺</div><h3>Doctor Contacts</h3><p>Find specialist doctors for each body part with contact details and years of experience.</p></div>
+      <div class="feat-card reveal"><div class="feat-icon">💊</div><h3>Medicine Guide</h3><p>Learn about common medications including usage, dosage guidance, and safety information.</p></div>
+      <div class="feat-card reveal"><div class="feat-icon">🛡️</div><h3>Always Safe</h3><p>Educational content only. We always remind you to consult a professional for personal medical advice.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMON ILLNESS MODAL -->
+<div class="modal-overlay" id="ci-modal">
+  <div class="modal" style="max-width:640px">
+    <div class="m-hdr"><h3 id="ci-title">Details</h3><button class="m-close" onclick="closeModal('ci-modal')">✕</button></div>
+    <div class="m-body" id="ci-body"></div>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand"><a href="/" class="logo" style="margin-bottom:10px;display:inline-flex"><div class="logo-ic" style="width:34px;height:34px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div><div class="logo-t" style="font-size:15px">AI Doctor <span>Analysis</span></div></div></a><p>An educational health platform empowering individuals with reliable medical knowledge.</p></div>
+      <div class="foot-links"><h4>Quick Links</h4><a href="/">Home</a><a href="/about">About</a><a href="/tips">Health Tips</a><a href="/contact">Contact</a></div>
+      <div class="foot-links"><h4>Body Regions</h4><a href="/illness?part=head">Head</a><a href="/illness?part=chest">Chest</a><a href="/illness?part=stomach">Stomach</a><a href="/illness?part=back">Back</a><a href="/illness?part=feet">Feet</a></div>
+      <div class="foot-disc"><h4>Medical Disclaimer</h4><p>For educational purposes only. Always consult a qualified medical professional for diagnosis and treatment.</p></div>
+    </div>
+    <div class="foot-btm">© 2024 AI Doctor Analysis. Educational use only.</div>
+  </div>
+</footer>
+
+<script src="/static/js/shared.js"></script>
+<script>
+// Body map hover & click
+document.querySelectorAll('.bp').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    document.getElementById('hover-lbl').textContent=el.dataset.lbl;
+    document.querySelectorAll(`[data-part="${el.dataset.part}"]`).forEach(p=>p.style.fill='rgba(0,180,216,.3)');
+  });
+  el.addEventListener('mouseleave',()=>{
+    document.getElementById('hover-lbl').textContent='Hover to select';
+    document.querySelectorAll(`[data-part="${el.dataset.part}"]`).forEach(p=>p.style.fill='transparent');
+  });
+  el.addEventListener('click',()=>{ window.location.href=`/illness?part=${el.dataset.part}`; });
+});
+
+// Load common illnesses from Flask API
+async function loadCommon(){
+  const grid=document.getElementById('common-grid');
+  try{
+    const r=await fetch('/api/common-illnesses');
+    const j=await r.json();
+    if(!j.success||!j.data.length){grid.innerHTML='<p style="color:var(--tx-m);text-align:center;padding:20px">No data available.</p>';return;}
+    grid.innerHTML=j.data.map(ci=>`<div class="ci-card" onclick="showCI(${ci.id})"><div class="ci-icon">${esc(ci.icon)}</div><div class="ci-name">${esc(ci.name)}</div></div>`).join('');
+    window._ciData=j.data;
+  }catch(e){grid.innerHTML='<p style="color:var(--tx-m);text-align:center;padding:20px">Could not load data. Make sure Flask server is running.</p>';}
+}
+
+function showCI(id){
+  const ci=window._ciData&&window._ciData.find(x=>x.id===id);
+  if(!ci)return;
+  document.getElementById('ci-title').textContent=ci.icon+' '+ci.name;
+  document.getElementById('ci-body').innerHTML=`
+    <p style="color:var(--tx-l);line-height:1.75;margin-bottom:18px;font-size:15px">${esc(ci.description)}</p>
+    <div class="list-title">🔍 Symptoms</div>
+    <ul class="sym-list">${(ci.symptoms||[]).map(s=>`<li>${esc(s)}</li>`).join('')}</ul>
+    <div class="list-title" style="margin-top:18px">💚 Care Tips</div>
+    <ul class="care-list">${(ci.care_tips||[]).map(c=>`<li>${esc(c)}</li>`).join('')}</ul>
+    <div class="list-title" style="margin-top:18px">💊 Medicines</div>
+    <div class="med-warn">⚠️ Educational only — consult a doctor before taking any medication.</div>
+    <div class="med-cards" style="margin-top:12px">
+      ${(ci.medicines||[]).map(m=>`<div class="med-card"><div class="med-name">${esc(m.name)}</div><span class="otc-badge ${m.is_otc?'otc-yes':'otc-no'}">${m.is_otc?'✓ Over-the-Counter':'⚕ Prescription Required'}</span><div class="med-info">${esc(m.info)}</div></div>`).join('')}
+    </div>
+    <div style="margin-top:16px;padding:12px 14px;background:#e8f4ff;border-radius:9px;font-size:13px;color:var(--pr-d);border-left:3px solid var(--pr)"><strong>⚕️ Note:</strong> This is for educational purposes only. If symptoms are severe, consult a qualified healthcare professional immediately.</div>`;
+  openModal('ci-modal');
+}
+
+loadCommon();
+</script>
+</body>
+</html>

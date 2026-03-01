@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Contact — AI Doctor Analysis</title><link rel="stylesheet" href="/static/css/style.css"></head>
+<body>
+<header><div class="hdr"><a href="/" class="logo"><div class="logo-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div><div class="logo-t">AI Doctor <span>Analysis</span></div><div class="logo-s">Smart Health Education</div></div></a><nav class="main-nav" id="main-nav"><a href="/" class="nav-link">Home</a><a href="/about" class="nav-link">About</a><a href="/tips" class="nav-link">Health Tips</a><a href="/contact" class="nav-link active">Contact</a></nav><button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button></div></header>
+
+<div class="pg-hero contact-bg"><div class="container"><div class="badge">📞 Get In Touch</div><h1>Contact Us</h1><p>Have questions or feedback? We'd love to hear from you. We typically respond within 24 hours.</p></div></div>
+
+<div class="container contact-body">
+  <div class="contact-grid">
+    <div class="cinfo reveal">
+      <h2>Contact Information</h2>
+      <p class="cintro">Reach out through any of the following channels.</p>
+      <div class="citem"><div class="citem-ic">📧</div><div><div class="citem-lbl">Email Address</div><a href="mailto:contact@aidoctoranalysis.com" class="citem-val">contact@aidoctoranalysis.com</a></div></div>
+      <div class="citem"><div class="citem-ic">📞</div><div><div class="citem-lbl">Phone Number</div><a href="tel:+15550199000" class="citem-val">+1 (555) 019-9000</a></div></div>
+      <div class="citem"><div class="citem-ic">📍</div><div><div class="citem-lbl">Location</div><div class="citem-val">123 Health Innovation Ave<br>Medical District, NY 10001</div></div></div>
+      <div class="citem"><div class="citem-ic">🕐</div><div><div class="citem-lbl">Support Hours</div><div class="citem-val">Mon – Fri: 9:00 AM – 6:00 PM<br>Saturday: 10:00 AM – 4:00 PM</div></div></div>
+      <div style="margin-top:28px;padding:20px;background:var(--g50);border-radius:var(--rsm);border:1.5px solid var(--g100)"><h4 style="font-size:14px;color:var(--pr);margin-bottom:10px">⚕️ Medical Emergency?</h4><p style="font-size:13px;color:var(--tx-l);line-height:1.6">If you are experiencing a medical emergency, please call your local emergency number (911 in the US) or go to the nearest emergency room immediately.</p></div>
+    </div>
+    <div class="cform-card reveal">
+      <h2>Send a Message</h2>
+      <div id="form-success" class="success-msg" style="display:none"><span>✅</span> Thank you! Your message has been saved to the database.</div>
+      <div id="form-err" class="err-msg" style="display:none"></div>
+      <form id="contact-form" onsubmit="submitForm(event)">
+        <div class="fg"><label>Full Name *</label><input type="text" id="cname" placeholder="Enter your full name" required></div>
+        <div class="fg"><label>Email Address *</label><input type="email" id="cemail" placeholder="Enter your email" required></div>
+        <div class="fg"><label>Message *</label><textarea id="cmsg" rows="5" placeholder="Write your message here..." required></textarea></div>
+        <button type="submit" class="btn btn-pr btn-full" id="submit-btn">Send Message <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<footer><div class="container"><div class="foot-grid"><div class="foot-brand"><a href="/" class="logo" style="margin-bottom:10px;display:inline-flex"><div class="logo-ic" style="width:34px;height:34px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div><div class="logo-t" style="font-size:15px">AI Doctor <span>Analysis</span></div></div></a><p>An educational health platform.</p></div><div class="foot-links"><h4>Quick Links</h4><a href="/">Home</a><a href="/about">About</a><a href="/tips">Health Tips</a><a href="/contact">Contact</a></div><div class="foot-links"><h4>Body Regions</h4><a href="/illness?part=head">Head</a><a href="/illness?part=chest">Chest</a><a href="/illness?part=stomach">Stomach</a><a href="/illness?part=back">Back</a><a href="/illness?part=feet">Feet</a></div><div class="foot-disc"><h4>Disclaimer</h4><p>For educational purposes only. Consult a qualified medical professional.</p></div></div><div class="foot-btm">© 2024 AI Doctor Analysis. Educational use only.</div></div></footer>
+
+<div id="toast" class="toast"></div>
+<script src="/static/js/shared.js"></script>
+<script>
+async function submitForm(e){
+  e.preventDefault();
+  const btn=document.getElementById('submit-btn');
+  btn.disabled=true;btn.textContent='Sending...';
+  document.getElementById('form-err').style.display='none';
+  try{
+    const r=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:document.getElementById('cname').value.trim(),email:document.getElementById('cemail').value.trim(),message:document.getElementById('cmsg').value.trim()})});
+    const j=await r.json();
+    if(j.success){
+      document.getElementById('form-success').style.display='flex';
+      document.getElementById('contact-form').reset();
+      showToast('Message saved to database!','success');
+    } else {
+      document.getElementById('form-err').textContent=j.message||'Error sending message.';
+      document.getElementById('form-err').style.display='block';
+    }
+  }catch(err){
+    document.getElementById('form-err').textContent='Could not connect to server. Make sure Flask is running.';
+    document.getElementById('form-err').style.display='block';
+  }
+  btn.disabled=false;btn.innerHTML='Send Message <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
+}
+</script>
+</body></html>

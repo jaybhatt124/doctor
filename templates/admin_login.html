@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Login — AI Doctor Analysis</title><link rel="stylesheet" href="/static/css/style.css"></head>
+<body class="admin-login-wrap">
+<div class="admin-login-card">
+  <div class="alc-hdr">
+    <div class="alc-ico">🔐</div>
+    <h2>Admin Access</h2>
+    <p>Authorised personnel only</p>
+  </div>
+  <div class="alc-body">
+    <div id="login-err" class="err-msg" style="display:none"></div>
+    <form onsubmit="doLogin(event)">
+      <div class="fg"><label>Email Address</label><input type="email" id="l-email" placeholder="admin@gmail.com" value="admin@gmail.com" required></div>
+      <div class="fg"><label>Password</label><div class="pw-field"><input type="password" id="l-pass" placeholder="••••••••" value="admin123" required><button type="button" class="eye-btn" onclick="togglePw(this)">👁</button></div></div>
+      <button type="submit" class="btn btn-pr btn-full" style="margin-bottom:10px">Sign In to Dashboard →</button>
+      <a href="/" class="btn btn-gh btn-full" style="margin-top:4px;display:flex">← Return to Website</a>
+    </form>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+<script src="/static/js/shared.js"></script>
+<script>
+async function doLogin(e){
+  e.preventDefault();
+  const err=document.getElementById('login-err');
+  err.style.display='none';
+  try{
+    const r=await fetch('/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('l-email').value,password:document.getElementById('l-pass').value})});
+    const j=await r.json();
+    if(j.success){showToast('Login successful! Redirecting...','success');setTimeout(()=>window.location.href='/admin',700);}
+    else{err.textContent=j.message||'Invalid credentials.';err.style.display='block';}
+  }catch(ex){err.textContent='Could not connect to server.';err.style.display='block';}
+}
+function togglePw(btn){const inp=btn.previousElementSibling;inp.type=inp.type==='password'?'text':'password';btn.textContent=inp.type==='password'?'👁':'🙈';}
+</script>
+</body></html>

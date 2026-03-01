@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Illness Info — AI Doctor Analysis</title>
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<header>
+  <div class="hdr">
+    <a href="/" class="logo"><div class="logo-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div><div class="logo-t">AI Doctor <span>Analysis</span></div><div class="logo-s">Smart Health Education</div></div></a>
+    <nav class="main-nav" id="main-nav"><a href="/" class="nav-link">Home</a><a href="/about" class="nav-link">About</a><a href="/tips" class="nav-link">Health Tips</a><a href="/contact" class="nav-link">Contact</a></nav>
+    <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="pg-hero illness-bg" id="ill-hero">
+  <div class="container">
+    <a href="/" class="back-btn">← Back to Body Map</a>
+    <div class="badge" id="ill-badge"></div>
+    <h1 id="ill-title">Loading...</h1>
+    <p id="ill-sub"></p>
+  </div>
+</div>
+
+<div class="ill-container">
+  <div class="container" id="ill-content">
+    <div style="text-align:center;padding:80px 0"><div class="loader"></div><p style="color:var(--tx-m)">Loading health information from database...</p></div>
+  </div>
+</div>
+
+<div class="disclaimer-bar">
+  <div class="container">
+    <div class="disclaimer"><span style="font-size:20px;flex-shrink:0">⚕️</span><span><strong>Medical Disclaimer:</strong> This website is for educational purposes only. All information provided is general in nature and should not replace professional medical advice, diagnosis, or treatment. Please consult a qualified doctor for any health concerns.</span></div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand"><a href="/" class="logo" style="margin-bottom:10px;display:inline-flex"><div class="logo-ic" style="width:34px;height:34px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div><div class="logo-t" style="font-size:15px">AI Doctor <span>Analysis</span></div></div></a><p>An educational health platform.</p></div>
+      <div class="foot-links"><h4>Quick Links</h4><a href="/">Home</a><a href="/about">About</a><a href="/tips">Health Tips</a><a href="/contact">Contact</a></div>
+      <div class="foot-links"><h4>Body Regions</h4><a href="/illness?part=head">Head</a><a href="/illness?part=neck">Neck</a><a href="/illness?part=chest">Chest</a><a href="/illness?part=stomach">Stomach</a><a href="/illness?part=back">Back</a><a href="/illness?part=feet">Feet</a></div>
+      <div class="foot-disc"><h4>Disclaimer</h4><p>For educational purposes only. Always consult a qualified medical professional.</p></div>
+    </div>
+    <div class="foot-btm">© 2024 AI Doctor Analysis. Educational use only.</div>
+  </div>
+</footer>
+
+<script src="/static/js/shared.js"></script>
+<script>
+const PART_ICONS={head:'🧠',neck:'🦴',shoulders:'💪',chest:'🫁',stomach:'🫃',arms:'🦾',back:'🦴',knees:'🦵',legs:'🦵',feet:'🦶'};
+const DOC_EMOJIS={'Neurologist':'🧠','Headache Specialist':'🤕','Orthopedic Surgeon':'🦴','Sports Orthopaedics':'🏃','Cardiologist':'❤️','Pulmonologist':'🫁','Gastroenterologist':'🫃','Sports Medicine':'🏅','Spine Specialist':'🦴','Rheumatologist':'💊','Vascular Surgeon':'🩸','Podiatrist':'🦶'};
+
+async function loadIllness(){
+  const params=new URLSearchParams(window.location.search);
+  const part=(params.get('part')||'').toLowerCase().trim();
+  if(!part){document.getElementById('ill-content').innerHTML='<div style="text-align:center;padding:60px"><h2 style="color:var(--pr)">No body part selected</h2><p style="color:var(--tx-m);margin:14px 0 24px">Please go back and click on a body part.</p><a href="/" class="btn btn-pr">← Go to Body Map</a></div>';return;}
+
+  try{
+    const r=await fetch(`/api/illness/${encodeURIComponent(part)}`);
+    const j=await r.json();
+    if(!j.success){
+      document.getElementById('ill-content').innerHTML=`<div style="text-align:center;padding:60px"><div style="font-size:48px;margin-bottom:16px">⚠️</div><h2 style="color:var(--pr);margin-bottom:10px">Body Part Not Found</h2><p style="color:var(--tx-m);margin-bottom:24px">No data found for "<strong>${esc(part)}</strong>".</p><a href="/" class="btn btn-pr">← Back to Body Map</a></div>`;
+      return;
+    }
+    const {part:p,illnesses,doctors}=j.data;
+    const icon=PART_ICONS[part]||'🏥';
+    document.getElementById('ill-badge').textContent=icon+' '+p.name;
+    document.getElementById('ill-title').textContent=p.name+' — Health Information';
+    document.getElementById('ill-sub').textContent=`Conditions, symptoms, care tips, and specialists related to ${p.name} health.`;
+    document.title=p.name+' — AI Doctor Analysis';
+
+    let html='';
+    if(!illnesses.length){
+      html=`<div class="ill-card" style="text-align:center;padding:48px"><div style="font-size:40px;margin-bottom:12px">📋</div><p style="color:var(--tx-m)">No illness data for <strong>${esc(p.name)}</strong> yet. Admin can add via the admin panel.</p></div>`;
+    } else {
+      illnesses.forEach((ill,idx)=>{
+        html+=`<div class="ill-card reveal">
+          <div class="ill-hdr"><div class="ill-ico">${icon}</div><div><div class="ill-name">${esc(ill.name)}</div><span class="sev ${ill.severity||'mild'}">${(ill.severity||'mild').charAt(0).toUpperCase()+(ill.severity||'mild').slice(1)} Severity</span></div></div>
+          <p class="ill-desc">${esc(ill.description)}</p>
+          <div class="list-title">🔍 Symptoms</div>
+          <ul class="sym-list">${(ill.symptoms||[]).map(s=>`<li>${esc(s)}</li>`).join('')}</ul>
+          <div class="list-title">💚 Care Tips</div>
+          <ul class="care-list">${(ill.care_tips||[]).map(c=>`<li>${esc(c)}</li>`).join('')}</ul>
+          ${ill.medicines&&ill.medicines.length?`<div class="list-title">💊 Medicine Information</div><div class="med-warn">⚠️ Educational only. Always consult a doctor before taking any medication.</div><div class="med-cards">${ill.medicines.map(m=>`<div class="med-card"><div class="med-name">${esc(m.name)}</div><span class="otc-badge ${m.is_otc?'otc-yes':'otc-no'}">${m.is_otc?'✓ Over-the-Counter':'⚕ Prescription Required'}</span><div class="med-info">${esc(m.dosage||m.description||'')}</div></div>`).join('')}</div>`:''}
+        </div>${idx<illnesses.length-1?'<hr style="border:none;border-top:2px dashed var(--g100);margin:8px 0">':''}`;
+      });
+    }
+
+    if(doctors.length){
+      html+=`<div class="ill-card reveal"><div class="ill-hdr"><div class="ill-ico">👨‍⚕️</div><div><div class="ill-name">Recommended Specialists</div></div></div>
+        <div class="doc-grid">${doctors.map(d=>`<div class="doc-card"><div class="doc-av">${DOC_EMOJIS[d.specialization]||'👨‍⚕️'}</div><div class="doc-name">${esc(d.name)}</div><div class="doc-spec">${esc(d.specialization)}</div><div class="doc-hosp">${d.hospital?'🏥 '+esc(d.hospital):''}</div><div class="doc-ctc">${d.phone?`<a href="tel:${esc(d.phone)}">📞 ${esc(d.phone)}</a>`:''} ${d.email?`<a href="mailto:${esc(d.email)}">📧 ${esc(d.email)}</a>`:''}</div>${d.experience_years?`<span class="doc-exp">${d.experience_years} yrs experience</span>`:''}</div>`).join('')}</div></div>`;
+    } else {
+      html+=`<div class="ill-card reveal" style="text-align:center;padding:32px"><div style="font-size:32px;margin-bottom:10px">👨‍⚕️</div><p style="color:var(--tx-m)">No specialist added yet for ${esc(p.name)}. Admin can add doctors via the admin panel.</p></div>`;
+    }
+    document.getElementById('ill-content').innerHTML=html;
+    initReveal();
+  }catch(e){
+    document.getElementById('ill-content').innerHTML='<div style="text-align:center;padding:60px"><div style="font-size:40px;margin-bottom:12px">⚠️</div><p style="color:var(--tx-m)">Could not connect to server. Make sure Flask is running on port 5000.</p><a href="/" class="btn btn-pr" style="margin-top:16px">← Back</a></div>';
+  }
+}
+loadIllness();
+</script>
+</body>
+</html>
